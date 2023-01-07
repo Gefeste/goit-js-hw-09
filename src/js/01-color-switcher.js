@@ -3,6 +3,7 @@ const btnElStop = document.querySelector('button[data-stop]');
 const bodyEl = document.querySelector('body')
 btnElStart.classList.add('btn');
 btnElStop.classList.add('btn')
+let timerId = null;
 
 btnElStart.addEventListener('click', onStartClick)
 btnElStop.addEventListener('click', onStopClick)
@@ -10,7 +11,7 @@ btnElStop.addEventListener('click', onStopClick)
 function onStartClick() {
 timerId = setInterval(() => {
            bodyEl.style.backgroundColor = getRandomHexColor()
-        }, 1000)
+        }, 50)
 
     if (!btnElStart.disabled) {
         btnElStart.setAttribute('disabled', true)
