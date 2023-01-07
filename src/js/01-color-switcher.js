@@ -11,7 +11,7 @@ btnElStop.addEventListener('click', onStopClick)
 function onStartClick() {
 timerId = setInterval(() => {
            bodyEl.style.backgroundColor = getRandomHexColor()
-        }, 50)
+        }, 1000)
 
     if (!btnElStart.disabled) {
         btnElStart.setAttribute('disabled', true)
@@ -27,6 +27,7 @@ clearInterval(timerId)
             btnElStart.removeAttribute('disabled', false) 
         }
 };
+
 
 
 function getRandomHexColor() {
