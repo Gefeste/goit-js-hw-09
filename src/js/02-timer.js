@@ -1,49 +1,83 @@
 import flatpickr from "flatpickr";
+import Notiflix from 'notiflix';
 import "flatpickr/dist/flatpickr.min.css";
 
 const inputEl = document.querySelector('#datetime-picker')
 const btnElStart = document.querySelector('button[data-start]');
-let timerId = null;
+const btnElStop = document.querySelector('button[data-stop]');
+
+const textAttributeSeconds = document.querySelector('[data-seconds]')
+const textAttributeMinutes = document.querySelector('[data-minutes]')
+const textAttributeHours = document.querySelector('[data-hours]')
+const textAttributeDays = document.querySelector('[data-days]')
+
 btnElStart.setAttribute('disabled', true)
+let timerId = null;
+let currentDate
+let selectDay
 
-btnElStart.addEventListener('click', onTimerStart);
-const startTime = Date.now();
-
-function onTimerStart() {
-
-  timerId = setInterval(() => {
-    console.log('date', startTime)
-    convertMs()
-  }, 1000);
-
-}
-
+btnElStop.addEventListener('click', () => {
+  textAttributeSeconds.textContent = '00';
+    textAttributeMinutes.textContent = '00';
+    textAttributeHours.textContent = '00';
+  textAttributeDays.textContent = '00';
+  btnElStart.setAttribute('disabled', true)
+  clearInterval(timerId)
+})
 
 const options = {
-  
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    const selectDay = selectedDates[0]
-    console.log("const", selectDay)
+
+  const startTime = Date.now();
+    selectDay = selectedDates[0]
+
     if (selectDay < startTime) {
-      alert("Please choose a date in the future")
+      Notiflix.Notify.failure('Please choose a date in the future');
     }
     if (selectDay > startTime) {
       btnElStart.removeAttribute('disabled', true)
+      Notiflix.Notify.success('Great, you choose a date in the future!');
     }
-    new Date(selectDay, startTime);
-    const outOfTime = selectDay - startTime;
-    console.log("outOfTime", outOfTime)
-    console.log("convert", convertMs(outOfTime))
+   
+    currentDate = new Date(selectDay);
   },
 };
 
 
+btnElStart.addEventListener('click', onTimerStart);
+
+function onTimerStart() {
+  timerId = setInterval(() => {
+    const Currentstart = Date.now()
+    const TIME = currentDate - Currentstart
+    const getTime = convertMs(TIME)
+   
+    textAttributeSeconds.textContent = getTime.seconds;
+    textAttributeMinutes.textContent = getTime.minutes;
+    textAttributeHours.textContent = getTime.hours;
+    textAttributeDays.textContent = getTime.days;
+
+    if (getTime.days === '00' &&
+        getTime.hours === '00' &&
+        getTime.minutes === '00' &&
+        getTime.seconds === '00'
+      ) {
+        clearInterval(timerId)
+    }
+    
+  }, 1000);
+
+}
 
 flatpickr(inputEl, options)
+
+function addLeadingZero(value) {
+  return String(value).padStart(2, '0')
+}
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -53,17 +87,13 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = Math.floor(ms / day);
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = Math.floor((ms % day) / hour);
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+  const seconds = addLeadingZero(Math.floor((((ms % day) % hour) % minute) / second));
 
   return { days, hours, minutes, seconds };
 }
-
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
