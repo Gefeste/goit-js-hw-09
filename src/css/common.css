@@ -39,7 +39,7 @@ input {
   font-size: 22px;
 }
 
-button {
+.button {
   width: 80px;
   height: 40px;
   font-size: 24px;
