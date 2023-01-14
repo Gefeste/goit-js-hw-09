@@ -61,11 +61,7 @@ function onTimerStart() {
     textAttributeHours.textContent = getTime.hours;
     textAttributeDays.textContent = getTime.days;
 
-    if (getTime.days === '00' &&
-        getTime.hours === '00' &&
-        getTime.minutes === '00' &&
-        getTime.seconds === '00'
-      ) {
+    if (TIME < 1000) {
         clearInterval(timerId)
     }
     
