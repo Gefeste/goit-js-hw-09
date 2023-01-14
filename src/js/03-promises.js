@@ -20,6 +20,7 @@ function test(e) {
   }, delay);
     delay += step;
   };
+  e.target.reset();
 };
 
 
