@@ -11,19 +11,12 @@ const textAttributeMinutes = document.querySelector('[data-minutes]')
 const textAttributeHours = document.querySelector('[data-hours]')
 const textAttributeDays = document.querySelector('[data-days]')
 
-btnElStart.setAttribute('disabled', true)
+btnElStart.setAttribute('disabled', 'true');
 let timerId = null;
-let currentDate
-let selectDay
+let currentDate;
+let selectDay;
 
-btnElStop.addEventListener('click', () => {
-  textAttributeSeconds.textContent = '00';
-    textAttributeMinutes.textContent = '00';
-    textAttributeHours.textContent = '00';
-  textAttributeDays.textContent = '00';
-  btnElStart.setAttribute('disabled', true)
-  clearInterval(timerId)
-})
+
 
 const options = {
   enableTime: true,
@@ -39,7 +32,7 @@ const options = {
       Notiflix.Notify.failure('Please choose a date in the future');
     }
     if (selectDay > startTime) {
-      btnElStart.removeAttribute('disabled', true)
+      btnElStart.removeAttribute('disabled', 'true')
       Notiflix.Notify.success('Great, you choose a date in the future!');
     }
    
@@ -48,9 +41,22 @@ const options = {
 };
 
 
+btnElStop.addEventListener('click', () => {
+  inputEl.removeAttribute('disabled');
+  textAttributeSeconds.textContent = '00';
+  textAttributeMinutes.textContent = '00';
+  textAttributeHours.textContent = '00';
+  textAttributeDays.textContent = '00';
+  btnElStart.setAttribute('disabled', 'true')
+  clearInterval(timerId)
+});
+
+
 btnElStart.addEventListener('click', onTimerStart);
 
 function onTimerStart() {
+  inputEl.setAttribute('disabled', 'true');
+  btnElStart.setAttribute('disabled', 'true');
   timerId = setInterval(() => {
     const Currentstart = Date.now()
     const TIME = currentDate - Currentstart
